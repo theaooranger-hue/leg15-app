@@ -3,58 +3,333 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2563eb">
+<meta name="theme-color" content="#205ebe">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="下肢長15％">
+<meta name="apple-mobile-web-app-title" content="参加者管理">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<title>下肢長15％記録</title>
+<title>実験参加者管理</title>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#667085;--accent:#2563eb;--line:#d9e0ea;--danger:#b42318}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Yu Gothic",sans-serif;min-height:100vh}.wrap{max-width:760px;margin:auto;padding:18px 14px 44px}h1{font-size:27px;text-align:center;margin:4px 0}.sub{text-align:center;color:var(--muted);margin-bottom:15px}.card{background:white;border-radius:20px;padding:19px;box-shadow:0 8px 28px rgba(16,24,40,.08);margin-bottom:14px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metaBox{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}.labelSmall{font-size:13px;color:var(--muted)}.valueBig{font-size:24px;font-weight:850;margin-top:3px}label{display:block;font-size:17px;font-weight:750;margin:14px 0 7px}input,textarea{width:100%;border:2px solid var(--line);border-radius:14px;padding:14px;font-size:21px;background:white}textarea{font-size:16px;min-height:70px}.result{margin-top:17px;padding:20px;background:#edf4ff;border-radius:17px;text-align:center}.result .number{font-size:50px;font-weight:900}.result .caption{font-weight:750}.result .exact{font-size:14px;color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}button{border:0;border-radius:14px;padding:14px 10px;font-size:16px;font-weight:800}.primary{background:var(--accent);color:white}.secondary{background:#e9eef6;color:var(--text)}.danger{background:#fff0f0;color:var(--danger)}.full{grid-column:1/-1}.status{text-align:center;color:#087443;font-weight:700;min-height:22px;margin-top:8px}.record{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.top{display:flex;justify-content:space-between;gap:8px}.rt{font-weight:850}.time{font-size:12px;color:var(--muted)}.body{line-height:1.6;margin-top:5px}.del{float:right;padding:7px 10px;font-size:12px;background:#fff0f0;color:var(--danger)}h2{font-size:20px;margin:0 0 8px}.empty,.note{color:var(--muted);font-size:13px;text-align:center;padding:12px}.install{font-size:13px;line-height:1.65;color:#475467;background:#f8fafc;border-radius:12px;padding:11px;margin-bottom:14px}
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--blue:#205ebe;--light:#edf4ff;--line:#d8e0ec;--red:#b42318;--green:#087443}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Yu Gothic",sans-serif}
+.wrap{max-width:900px;margin:auto;padding:16px 14px 44px}
+h1{text-align:center;font-size:28px;margin:8px 0 2px}.subtitle{text-align:center;color:var(--muted);margin-bottom:16px}
+.card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 8px 28px rgba(16,24,40,.08);margin-bottom:15px}
+h2{font-size:21px;margin:0 0 13px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metaBox{border:1px solid var(--line);background:#f8fafc;border-radius:14px;padding:13px;text-align:center}
+.metaLabel{font-size:13px;color:var(--muted)}.metaValue{font-size:23px;font-weight:850;margin-top:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:16px;font-weight:750;margin:13px 0 7px}
+input,select,textarea{width:100%;border:2px solid var(--line);border-radius:13px;padding:13px 14px;font-size:18px;background:#fff;color:var(--text)}
+textarea{min-height:68px;resize:vertical;font-size:15px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+.result{background:var(--light);border-radius:17px;padding:17px;text-align:center;margin-top:14px}
+.resultLabel{font-weight:750}.resultValue{font-size:46px;font-weight:900;margin:4px}.resultSub{font-size:13px;color:var(--muted)}
+.order{background:#f8fafc;border:2px solid var(--line);border-radius:17px;padding:17px;text-align:center;margin-top:12px}
+.orderTitle{font-weight:800;color:var(--blue);margin-bottom:8px}.orderSteps{font-size:20px;font-weight:850;line-height:1.85}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+button{border:0;border-radius:13px;padding:14px 10px;font-size:16px;font-weight:800;cursor:pointer}
+.primary{background:var(--blue);color:#fff}.secondary{background:#e9eef6;color:var(--text)}.danger{background:#fff0f0;color:var(--red)}.full{grid-column:1/-1}
+.group{margin-bottom:14px}.groupTitle{font-weight:850;margin-bottom:8px}.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-size:14px;font-weight:700}
+.chip.used{background:#eefbf4;color:#087443;border-color:#b7e4c7}
+.status{text-align:center;color:var(--green);font-weight:750;min-height:22px;margin-top:8px}
+.tableWrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:960px;background:white}
+th,td{padding:10px 9px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;white-space:nowrap}
+th{background:#f8fafc;font-weight:850}.smallBtn{padding:7px 10px;font-size:12px;background:#fff0f0;color:var(--red)}
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef4ff;color:#205ebe;font-weight:750}.exportPanel{background:#fff8e8;border:2px solid #f2c94c;border-radius:16px;padding:16px;text-align:center;margin-bottom:14px}.exportCount{font-size:34px;font-weight:900;color:#9a6700;margin:4px 0}.exportMeta{font-size:13px;color:#667085}.exportedTag{display:inline-block;padding:4px 8px;border-radius:999px;background:#eefbf4;color:#087443;font-weight:750;font-size:12px}.pendingTag{display:inline-block;padding:4px 8px;border-radius:999px;background:#fff4e5;color:#9a6700;font-weight:750;font-size:12px}
+@media(max-width:650px){.grid2{grid-template-columns:1fr}.metaValue{font-size:20px}.resultValue{font-size:42px}.wrap{padding:12px 10px 36px}.card{padding:16px}}
 </style>
 </head>
-<body><div class="wrap">
-<h1>下肢長15％ 記録</h1><div class="sub">測定・計算・保存</div>
-<div class="install"><b>ホーム画面に追加：</b> iPhone/iPadはSafariの共有ボタン →「ホーム画面に追加」。AndroidはChromeメニュー →「アプリをインストール」。</div>
+<body>
+<div class="wrap">
+<h1>実験参加者管理</h1>
+<div class="subtitle">参加者候補・下肢長15％・条件割付・増分記録出力</div>
+
 <section class="card">
-<div class="meta"><div class="metaBox"><div class="labelSmall">本日の日付</div><div class="valueBig" id="today">—</div></div><div class="metaBox"><div class="labelSmall">本日の参加者</div><div class="valueBig" id="dailyNo">第1名</div></div></div>
-<label>参加者ID（任意）</label><input id="pid" placeholder="例：P001">
-<label>下肢長（cm）</label><input id="leg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：90.0">
-<div class="result"><div class="caption">15％の高さ</div><div class="number" id="result">— cm</div><div class="exact" id="exact">下肢長 × 0.15</div></div>
-<label>メモ（任意）</label><textarea id="memo" placeholder="例：右足から開始"></textarea>
-<div class="grid"><button class="primary full" id="save">記録を保存</button><button class="secondary" id="clear">入力をクリア</button><button class="secondary" id="export">CSVを書き出す</button><button class="primary" id="exportExcel">Excelを書き出す</button><button class="secondary full" id="import">JSONバックアップを読み込む</button><input id="file" type="file" accept=".json,application/json" hidden><button class="secondary full" id="backup">JSONバックアップを保存</button></div><div class="status" id="status"></div>
-</section>
-<section class="card"><h2>本日の記録</h2><div id="todayList"></div></section>
-<section class="card"><h2>すべての記録</h2><div class="grid" style="margin-top:0"><button class="secondary" id="showAll">一覧を表示</button><button class="danger" id="deleteAll">全記録を削除</button></div><div id="allList"></div><div class="note">記録はこの端末のブラウザ内に保存されます。機種変更やブラウザデータ消去に備え、JSONまたはCSVを定期的に保存してください。</div></section>
+<div class="meta">
+<div class="metaBox"><div class="metaLabel">本日の日付</div><div class="metaValue" id="today">—</div></div>
+<div class="metaBox"><div class="metaLabel">本日の参加者</div><div class="metaValue" id="todayNo">第1名</div></div>
 </div>
+</section>
+
+<section class="card">
+<h2>1．参加者情報</h2>
+<div class="grid2">
+<div>
+<label>参加者名</label>
+<input id="name" placeholder="候補者を選択、または直接入力">
+</div>
+<div>
+<label>参加者ID（任意）</label>
+<input id="pid" placeholder="例：P001">
+</div>
+<div>
+<label>参加者区分</label>
+<select id="source">
+<option>樋口研</option>
+<option>ヘルプロ全体</option>
+<option>実験参加者プール</option>
+<option>陳さんの知人</option>
+<option>樋口先生の知り合い</option>
+<option>その他</option>
+</select>
+</div>
+<div>
+<label>実施状況</label>
+<select id="statusSel">
+<option>候補</option>
+<option>連絡済み</option>
+<option>予約済み</option>
+<option>実施済み</option>
+<option>辞退・キャンセル</option>
+</select>
+</div>
+<div>
+<label>実施予定日（任意）</label>
+<input id="scheduleDate" type="date">
+</div>
+<div>
+<label>実施予定時刻（任意）</label>
+<input id="scheduleTime" type="time">
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>2．下肢長15％</h2>
+<label>下肢長（cm）</label>
+<input id="leg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：90.0">
+<div class="result">
+<div class="resultLabel">15％の高さ</div>
+<div class="resultValue" id="leg15">— cm</div>
+<div class="resultSub" id="exact">下肢長 × 0.15</div>
+</div>
+</section>
+
+<section class="card">
+<h2>3．条件順序の割付</h2>
+<div class="note">6通りの順序のうち、使用回数が最も少ない順序からランダムに選び、人数ができるだけ均等になるように割り付けます。</div>
+<div class="order">
+<div class="orderTitle">今回の条件順序</div>
+<div class="orderSteps" id="orderSteps">未割付</div>
+</div>
+<div class="buttons">
+<button class="primary full" id="assignBtn">条件を自動割付</button>
+<button class="secondary full" id="clearOrderBtn">割付をクリア</button>
+</div>
+</section>
+
+<section class="card">
+<h2>未出力記録</h2>
+<div class="exportPanel">
+<div>まだExcelに出力していない記録</div>
+<div class="exportCount" id="pendingCount">0件</div>
+<div class="exportMeta" id="lastExportText">前回の出力：まだありません</div>
+</div>
+<div class="buttons">
+<button class="primary full" id="exportNewBtn">未出力分だけExcelに出力</button>
+<button class="secondary full" id="exportAllBtn">すべての記録をExcelに出力</button>
+</div>
+<div class="note">未出力分を出力すると、その記録には「出力済み」の印が付き、次回の未出力Excelには重複して入りません。</div>
+</section>
+
+<section class="card">
+<h2>4．メモ・保存</h2>
+<label>メモ（任意）</label>
+<textarea id="memo" placeholder="例：右足から跨ぎ開始、連絡事項など"></textarea>
+<div class="buttons">
+<button class="primary full" id="saveBtn">この参加者を保存</button>
+<button class="secondary" id="clearBtn">入力をクリア</button>
+<button class="secondary" id="csvBtn">CSVを書き出す</button>
+<button class="secondary" id="jsonBtn">バックアップ保存</button>
+</div>
+<div class="status" id="saveStatus"></div>
+</section>
+
+<section class="card">
+<h2>実験参加者候補</h2>
+<div id="candidateGroups"></div>
+<div class="note">名前をタップすると、参加者名と参加者区分が自動入力されます。緑色は既に保存済みの候補者です。</div>
+</section>
+
+<section class="card">
+<h2>保存済み記録</h2>
+<div class="tableWrap">
+<table>
+<thead><tr>
+<th>No.</th><th>日付</th><th>時刻</th><th>参加者</th><th>区分</th><th>状況</th><th>予定</th><th>下肢長</th><th>15％</th><th>条件順序</th><th>Excel</th><th>メモ</th><th></th>
+</tr></thead>
+<tbody id="recordBody"></tbody>
+</table>
+</div>
+<div class="buttons">
+<button class="danger full" id="deleteAllBtn">すべての記録を削除</button>
+</div>
+<div class="note">記録はこの端末のブラウザ内に保存されます。別の端末とは自動同期されません。実験終了後はExcelまたはバックアップを保存してください。</div>
+</section>
+</div>
+
 <script>
-const KEY='leg15_records_v2'; const $=id=>document.getElementById(id);
+const KEY='experiment_participant_manager_v2';
+const LAST_EXPORT_KEY='experiment_participant_manager_last_export_v2';
+const $=id=>document.getElementById(id);
+const candidates={
+'樋口研':['原薗さん','脇さん','広崎さん','阿久津さん','菊池さん','新井さん','山本さん','とふたにさん','秦さん','西村さん'],
+'ヘルプロ全体':['村田さん','中平さん','大西さん','土肥さん','土田さん'],
+'実験参加者プール':[],
+'陳さんの知人':['清水さん','王さん','朱さん'],
+'樋口先生の知り合い':['細澤さん','島津さん'],
+'その他':[]
+};
+const conditions=['自然足踏み','15％足踏み','15％歩行跨ぎ'];
+const orders=[
+['自然足踏み','15％足踏み','15％歩行跨ぎ'],
+['自然足踏み','15％歩行跨ぎ','15％足踏み'],
+['15％足踏み','自然足踏み','15％歩行跨ぎ'],
+['15％足踏み','15％歩行跨ぎ','自然足踏み'],
+['15％歩行跨ぎ','自然足踏み','15％足踏み'],
+['15％歩行跨ぎ','15％足踏み','自然足踏み']
+];
+let currentOrder=null;
 const pad=n=>String(n).padStart(2,'0');
 const dateKey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const dateJP=(d=new Date())=>`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
-const records=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
-const store=x=>localStorage.setItem(KEY,JSON.stringify(x));
-const todayRecords=()=>records().filter(x=>x.date===dateKey());
-function meta(){$('today').textContent=dateJP();$('dailyNo').textContent=`第${todayRecords().length+1}名`}
-function calc(){const v=parseFloat($('leg').value);if(!Number.isFinite(v)||v<=0){$('result').textContent='— cm';$('exact').textContent='下肢長 × 0.15';return null}const x=v*.15;$('result').textContent=x.toFixed(1)+' cm';$('exact').textContent='正確な値：'+x.toFixed(3)+' cm';return x}
+const getRecords=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
+const setRecords=x=>localStorage.setItem(KEY,JSON.stringify(x));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-function card(r){return `<div class="record"><button class="del" onclick="removeOne('${r.id}')">削除</button><div class="top"><div class="rt">第${r.dailyNo}名 ${r.pid?'・'+esc(r.pid):''}</div><div class="time">${r.date} ${r.time}</div></div><div class="body">下肢長：<b>${Number(r.leg).toFixed(1)} cm</b><br>15％：<b>${Number(r.result).toFixed(1)} cm</b>${r.memo?'<br>メモ：'+esc(r.memo):''}</div></div>`}
-function renderToday(){const x=todayRecords();$('todayList').innerHTML=x.length?x.slice().reverse().map(card).join(''):'<div class="empty">本日の記録はまだありません。</div>'}
-function renderAll(){const x=records();$('allList').innerHTML=x.length?x.slice().reverse().map(card).join(''):'<div class="empty">記録はありません。</div>'}
-function flash(t){$('status').textContent=t;setTimeout(()=>$('status').textContent='',2200)}
-function clearForm(){$('pid').value='';$('leg').value='';$('memo').value='';calc()}
-function save(){const leg=parseFloat($('leg').value),res=calc();if(!Number.isFinite(leg)||leg<=0||res===null){alert('正しい下肢長を入力してください。');return}const now=new Date(),all=records(),d=dateKey(now);all.push({id:String(Date.now()),date:d,time:`${pad(now.getHours())}:${pad(now.getMinutes())}`,dailyNo:all.filter(x=>x.date===d).length+1,pid:$('pid').value.trim(),leg,result:res,memo:$('memo').value.trim()});store(all);clearForm();meta();renderToday();$('allList').innerHTML='';flash('保存しました。')}
-window.removeOne=id=>{if(confirm('この記録を削除しますか？')){store(records().filter(x=>x.id!==id));meta();renderToday();renderAll()}}
-const csvq=v=>{const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+
+function refreshMeta(){
+ const today=dateKey();
+ $('today').textContent=dateJP();
+ $('todayNo').textContent=`第${getRecords().filter(r=>r.createdDate===today).length+1}名`;
+}
+function calc(){
+ const v=parseFloat($('leg').value);
+ if(!Number.isFinite(v)||v<=0){$('leg15').textContent='— cm';$('exact').textContent='下肢長 × 0.15';return null}
+ const x=v*.15;$('leg15').textContent=x.toFixed(1)+' cm';$('exact').textContent='正確な値：'+x.toFixed(3)+' cm';return x;
+}
+function orderKey(a){return a.join(' → ')}
+function renderOrder(){
+ $('orderSteps').innerHTML=currentOrder?currentOrder.map((x,i)=>`${i+1}．${esc(x)}`).join('<br>'):'未割付';
+}
+function assignOrder(){
+ const rec=getRecords();
+ const counts=Object.fromEntries(orders.map(o=>[orderKey(o),0]));
+ rec.forEach(r=>{if(r.order&&counts[r.order]!==undefined)counts[r.order]++});
+ const min=Math.min(...Object.values(counts));
+ const choices=orders.filter(o=>counts[orderKey(o)]===min);
+ currentOrder=choices[Math.floor(Math.random()*choices.length)];
+ renderOrder();
+}
+function renderCandidates(){
+ const used=new Set(getRecords().map(r=>r.name));
+ $('candidateGroups').innerHTML=Object.entries(candidates).map(([group,names])=>{
+   const chips=names.length?names.map(n=>`<button class="chip ${used.has(n)?'used':''}" onclick="pickCandidate('${esc(n)}','${esc(group)}')">${esc(n)}</button>`).join(''):'<span class="note">登録候補なし（参加者名を直接入力してください）</span>';
+   return `<div class="group"><div class="groupTitle">${esc(group)}</div><div class="chips">${chips}</div></div>`;
+ }).join('');
+}
+window.pickCandidate=(name,group)=>{$('name').value=name;$('source').value=group;window.scrollTo({top:0,behavior:'smooth'})};
+function clearForm(){
+ ['name','pid','scheduleDate','scheduleTime','leg','memo'].forEach(id=>$(id).value='');
+ $('source').value='樋口研';$('statusSel').value='候補';currentOrder=null;renderOrder();calc();
+}
+function flash(t){$('saveStatus').textContent=t;setTimeout(()=>$('saveStatus').textContent='',2300)}
+function saveRecord(){
+ const name=$('name').value.trim();
+ if(!name){alert('参加者名を入力してください。');return}
+ if(!currentOrder){alert('条件順序を割り付けてください。');return}
+ const leg=parseFloat($('leg').value), result=calc();
+ const now=new Date(), rec=getRecords(), today=dateKey(now);
+ const no=rec.length+1;
+ rec.push({
+  id:String(Date.now()), no,
+  createdDate:today, createdTime:`${pad(now.getHours())}:${pad(now.getMinutes())}`,
+  name, pid:$('pid').value.trim(), source:$('source').value, status:$('statusSel').value,
+  scheduleDate:$('scheduleDate').value, scheduleTime:$('scheduleTime').value,
+  leg:Number.isFinite(leg)?leg:null, leg15:result,
+  order:orderKey(currentOrder), memo:$('memo').value.trim(), exportedAt:null
+ });
+ setRecords(rec);clearForm();refreshMeta();renderRecords();renderCandidates();flash('保存しました。');
+}
+function renderRecords(){
+ const rec=getRecords();
+ $('recordBody').innerHTML=rec.length?rec.slice().reverse().map(r=>`<tr>
+ <td>${r.no}</td><td>${esc(r.createdDate)}</td><td>${esc(r.createdTime)}</td>
+ <td><b>${esc(r.name)}</b>${r.pid?'<br><span class="badge">'+esc(r.pid)+'</span>':''}</td>
+ <td>${esc(r.source)}</td><td>${esc(r.status)}</td>
+ <td>${esc([r.scheduleDate,r.scheduleTime].filter(Boolean).join(' '))}</td>
+ <td>${r.leg==null?'':Number(r.leg).toFixed(1)}</td><td>${r.leg15==null?'':Number(r.leg15).toFixed(1)}</td>
+ <td>${esc(r.order)}</td>
+ <td>${r.exportedAt?'<span class="exportedTag">出力済み</span>':'<span class="pendingTag">未出力</span>'}</td>
+ <td>${esc(r.memo)}</td>
+ <td><button class="smallBtn" onclick="removeRecord('${r.id}')">削除</button></td></tr>`).join(''):
+ '<tr><td colspan="13" style="text-align:center;color:#667085">記録はまだありません。</td></tr>';
+ refreshExportStatus();
+}
+window.removeRecord=id=>{if(confirm('この記録を削除しますか？')){setRecords(getRecords().filter(r=>r.id!==id));refreshMeta();renderRecords();renderCandidates()}};
+function rows(selected){
+ const list=selected||getRecords();
+ return [['No.','記録日','記録時刻','参加者名','参加者ID','参加者区分','実施状況','実施予定日','実施予定時刻','下肢長(cm)','15％高さ(cm)','条件順序','メモ'],
+ ...list.map(r=>[r.no,r.createdDate,r.createdTime,r.name,r.pid,r.source,r.status,r.scheduleDate,r.scheduleTime,r.leg??'',r.leg15??'',r.order,r.memo])];
+}
 function download(name,data,type){const b=new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
-function exportCSV(){const x=records();if(!x.length)return alert('記録がありません。');const rows=[['日付','時刻','当日番号','参加者ID','下肢長(cm)','15％高さ(cm)','メモ'],...x.map(r=>[r.date,r.time,r.dailyNo,r.pid,Number(r.leg).toFixed(1),Number(r.result).toFixed(1),r.memo])];download(`下肢長15記録_${dateKey()}.csv`,'\uFEFF'+rows.map(r=>r.map(csvq).join(',')).join('\n'),'text/csv;charset=utf-8')}
-function exportExcel(){const x=records();if(!x.length)return alert('記録がありません。');if(typeof XLSX==='undefined')return alert('Excel機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。');const rows=[['日付','時刻','当日番号','参加者ID','下肢長(cm)','15％高さ(cm)','メモ'],...x.map(r=>[r.date,r.time,Number(r.dailyNo),r.pid,Number(r.leg),Number(r.result),r.memo])];const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:13},{wch:8},{wch:10},{wch:14},{wch:13},{wch:15},{wch:28}];ws['!autofilter']={ref:`A1:G${rows.length}`};const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'下肢長15％記録');XLSX.writeFile(wb,`下肢長15％記録_${dateKey()}.xlsx`)}
-function backup(){download(`下肢長15バックアップ_${dateKey()}.json`,JSON.stringify(records(),null,2),'application/json')}
-$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const x=JSON.parse(rd.result);if(!Array.isArray(x))throw Error();if(confirm('現在の記録を読み込んだバックアップで置き換えますか？')){store(x);meta();renderToday();renderAll();flash('読み込みました。')}}catch{alert('正しいJSONバックアップではありません。')}};rd.readAsText(f)}
-$('leg').oninput=calc;$('save').onclick=save;$('clear').onclick=clearForm;$('export').onclick=exportCSV;$('exportExcel').onclick=exportExcel;$('backup').onclick=backup;$('import').onclick=()=>$('file').click();$('showAll').onclick=renderAll;$('deleteAll').onclick=()=>{if(confirm('すべての記録を削除しますか？')){localStorage.removeItem(KEY);meta();renderToday();renderAll()}}
+const csvq=v=>{const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function exportCSV(){if(!getRecords().length)return alert('記録がありません。');download(`実験参加者記録_${dateKey()}.csv`,'\uFEFF'+rows().map(r=>r.map(csvq).join(',')).join('\n'),'text/csv;charset=utf-8')}
+function xmlEsc(v){return String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function buildExcel(list,filePrefix){
+ if(!list.length){alert('出力する記録がありません。');return false}
+ const data=rows(list);
+ const xml=`<?xml version="1.0" encoding="UTF-8"?>
+ <?mso-application progid="Excel.Sheet"?>
+ <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#DCE6F1" ss:Pattern="Solid"/></Style></Styles>
+ <Worksheet ss:Name="参加者記録"><Table>
+ ${data.map((row,i)=>`<Row>${row.map(v=>`<Cell${i===0?' ss:StyleID="Header"':''}><Data ss:Type="${typeof v==='number'?'Number':'String'}">${xmlEsc(v)}</Data></Cell>`).join('')}</Row>`).join('')}
+ </Table></Worksheet></Workbook>`;
+ download(`${filePrefix}_${dateKey()}.xls`,'\uFEFF'+xml,'application/vnd.ms-excel');
+ return true;
+}
+function exportNewExcel(){
+ const all=getRecords(), pending=all.filter(r=>!r.exportedAt);
+ if(!pending.length){alert('未出力の記録はありません。');return}
+ if(buildExcel(pending,'実験参加者記録_未出力分')){
+   const stamp=new Date().toISOString();
+   const ids=new Set(pending.map(r=>r.id));
+   setRecords(all.map(r=>ids.has(r.id)?{...r,exportedAt:stamp}:r));
+   localStorage.setItem(LAST_EXPORT_KEY,stamp);
+   renderRecords();renderCandidates();flash(`${pending.length}件を出力済みにしました。`);
+ }
+}
+function exportAllExcel(){
+ const all=getRecords();
+ if(buildExcel(all,'実験参加者記録_全件')){
+   localStorage.setItem(LAST_EXPORT_KEY,new Date().toISOString());
+   refreshExportStatus();
+ }
+}
+function refreshExportStatus(){
+ const pending=getRecords().filter(r=>!r.exportedAt);
+ $('pendingCount').textContent=`${pending.length}件`;
+ const last=localStorage.getItem(LAST_EXPORT_KEY);
+ if(last){
+  const d=new Date(last);
+  $('lastExportText').textContent=`前回の出力：${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+ }else{
+  $('lastExportText').textContent='前回の出力：まだありません';
+ }
+}
+function exportJSON(){download(`実験参加者記録_バックアップ_${dateKey()}.json`,JSON.stringify(getRecords(),null,2),'application/json')}
+$('leg').addEventListener('input',calc);$('assignBtn').onclick=assignOrder;$('clearOrderBtn').onclick=()=>{currentOrder=null;renderOrder()};
+$('saveBtn').onclick=saveRecord;$('clearBtn').onclick=clearForm;$('exportNewBtn').onclick=exportNewExcel;$('exportAllBtn').onclick=exportAllExcel;$('csvBtn').onclick=exportCSV;$('jsonBtn').onclick=exportJSON;
+$('deleteAllBtn').onclick=()=>{if(confirm('すべての記録を削除しますか？この操作は元に戻せません。')){localStorage.removeItem(KEY);localStorage.removeItem(LAST_EXPORT_KEY);refreshMeta();renderRecords();renderCandidates()}};
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-meta();calc();renderToday();
+refreshMeta();calc();renderOrder();renderCandidates();renderRecords();
 </script>
-</body></html>
+</body>
+</html>

@@ -1,12 +1,12 @@
 {
-  "name": "下肢長15％記録",
-  "short_name": "下肢長15％",
-  "description": "下肢長の15％を計算し、参加者記録を端末に保存します。",
+  "name": "実験参加者管理",
+  "short_name": "参加者管理",
+  "description": "実験参加者候補、下肢長15％、条件割付、記録出力",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#2563eb",
+  "background_color": "#f5f7fb",
+  "theme_color": "#205ebe",
   "lang": "ja",
   "icons": [
     {
