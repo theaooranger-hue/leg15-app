@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="下肢長15％">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<title>下肢長15％記録</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#667085;--accent:#2563eb;--line:#d9e0ea;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Yu Gothic",sans-serif;min-height:100vh}.wrap{max-width:760px;margin:auto;padding:18px 14px 44px}h1{font-size:27px;text-align:center;margin:4px 0}.sub{text-align:center;color:var(--muted);margin-bottom:15px}.card{background:white;border-radius:20px;padding:19px;box-shadow:0 8px 28px rgba(16,24,40,.08);margin-bottom:14px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metaBox{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}.labelSmall{font-size:13px;color:var(--muted)}.valueBig{font-size:24px;font-weight:850;margin-top:3px}label{display:block;font-size:17px;font-weight:750;margin:14px 0 7px}input,textarea{width:100%;border:2px solid var(--line);border-radius:14px;padding:14px;font-size:21px;background:white}textarea{font-size:16px;min-height:70px}.result{margin-top:17px;padding:20px;background:#edf4ff;border-radius:17px;text-align:center}.result .number{font-size:50px;font-weight:900}.result .caption{font-weight:750}.result .exact{font-size:14px;color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}button{border:0;border-radius:14px;padding:14px 10px;font-size:16px;font-weight:800}.primary{background:var(--accent);color:white}.secondary{background:#e9eef6;color:var(--text)}.danger{background:#fff0f0;color:var(--danger)}.full{grid-column:1/-1}.status{text-align:center;color:#087443;font-weight:700;min-height:22px;margin-top:8px}.record{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.top{display:flex;justify-content:space-between;gap:8px}.rt{font-weight:850}.time{font-size:12px;color:var(--muted)}.body{line-height:1.6;margin-top:5px}.del{float:right;padding:7px 10px;font-size:12px;background:#fff0f0;color:var(--danger)}h2{font-size:20px;margin:0 0 8px}.empty,.note{color:var(--muted);font-size:13px;text-align:center;padding:12px}.install{font-size:13px;line-height:1.65;color:#475467;background:#f8fafc;border-radius:12px;padding:11px;margin-bottom:14px}
+</style>
+</head>
+<body><div class="wrap">
+<h1>下肢長15％ 記録</h1><div class="sub">測定・計算・保存</div>
+<div class="install"><b>ホーム画面に追加：</b> iPhone/iPadはSafariの共有ボタン →「ホーム画面に追加」。AndroidはChromeメニュー →「アプリをインストール」。</div>
+<section class="card">
+<div class="meta"><div class="metaBox"><div class="labelSmall">本日の日付</div><div class="valueBig" id="today">—</div></div><div class="metaBox"><div class="labelSmall">本日の参加者</div><div class="valueBig" id="dailyNo">第1名</div></div></div>
+<label>参加者ID（任意）</label><input id="pid" placeholder="例：P001">
+<label>下肢長（cm）</label><input id="leg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：90.0">
+<div class="result"><div class="caption">15％の高さ</div><div class="number" id="result">— cm</div><div class="exact" id="exact">下肢長 × 0.15</div></div>
+<label>メモ（任意）</label><textarea id="memo" placeholder="例：右足から開始"></textarea>
+<div class="grid"><button class="primary full" id="save">記録を保存</button><button class="secondary" id="clear">入力をクリア</button><button class="secondary" id="export">CSVを書き出す</button><button class="primary" id="exportExcel">Excelを書き出す</button><button class="secondary full" id="import">JSONバックアップを読み込む</button><input id="file" type="file" accept=".json,application/json" hidden><button class="secondary full" id="backup">JSONバックアップを保存</button></div><div class="status" id="status"></div>
+</section>
+<section class="card"><h2>本日の記録</h2><div id="todayList"></div></section>
+<section class="card"><h2>すべての記録</h2><div class="grid" style="margin-top:0"><button class="secondary" id="showAll">一覧を表示</button><button class="danger" id="deleteAll">全記録を削除</button></div><div id="allList"></div><div class="note">記録はこの端末のブラウザ内に保存されます。機種変更やブラウザデータ消去に備え、JSONまたはCSVを定期的に保存してください。</div></section>
+</div>
+<script>
+const KEY='leg15_records_v2'; const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+const dateKey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const dateJP=(d=new Date())=>`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+const records=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
+const store=x=>localStorage.setItem(KEY,JSON.stringify(x));
+const todayRecords=()=>records().filter(x=>x.date===dateKey());
+function meta(){$('today').textContent=dateJP();$('dailyNo').textContent=`第${todayRecords().length+1}名`}
+function calc(){const v=parseFloat($('leg').value);if(!Number.isFinite(v)||v<=0){$('result').textContent='— cm';$('exact').textContent='下肢長 × 0.15';return null}const x=v*.15;$('result').textContent=x.toFixed(1)+' cm';$('exact').textContent='正確な値：'+x.toFixed(3)+' cm';return x}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function card(r){return `<div class="record"><button class="del" onclick="removeOne('${r.id}')">削除</button><div class="top"><div class="rt">第${r.dailyNo}名 ${r.pid?'・'+esc(r.pid):''}</div><div class="time">${r.date} ${r.time}</div></div><div class="body">下肢長：<b>${Number(r.leg).toFixed(1)} cm</b><br>15％：<b>${Number(r.result).toFixed(1)} cm</b>${r.memo?'<br>メモ：'+esc(r.memo):''}</div></div>`}
+function renderToday(){const x=todayRecords();$('todayList').innerHTML=x.length?x.slice().reverse().map(card).join(''):'<div class="empty">本日の記録はまだありません。</div>'}
+function renderAll(){const x=records();$('allList').innerHTML=x.length?x.slice().reverse().map(card).join(''):'<div class="empty">記録はありません。</div>'}
+function flash(t){$('status').textContent=t;setTimeout(()=>$('status').textContent='',2200)}
+function clearForm(){$('pid').value='';$('leg').value='';$('memo').value='';calc()}
+function save(){const leg=parseFloat($('leg').value),res=calc();if(!Number.isFinite(leg)||leg<=0||res===null){alert('正しい下肢長を入力してください。');return}const now=new Date(),all=records(),d=dateKey(now);all.push({id:String(Date.now()),date:d,time:`${pad(now.getHours())}:${pad(now.getMinutes())}`,dailyNo:all.filter(x=>x.date===d).length+1,pid:$('pid').value.trim(),leg,result:res,memo:$('memo').value.trim()});store(all);clearForm();meta();renderToday();$('allList').innerHTML='';flash('保存しました。')}
+window.removeOne=id=>{if(confirm('この記録を削除しますか？')){store(records().filter(x=>x.id!==id));meta();renderToday();renderAll()}}
+const csvq=v=>{const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function download(name,data,type){const b=new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
+function exportCSV(){const x=records();if(!x.length)return alert('記録がありません。');const rows=[['日付','時刻','当日番号','参加者ID','下肢長(cm)','15％高さ(cm)','メモ'],...x.map(r=>[r.date,r.time,r.dailyNo,r.pid,Number(r.leg).toFixed(1),Number(r.result).toFixed(1),r.memo])];download(`下肢長15記録_${dateKey()}.csv`,'\uFEFF'+rows.map(r=>r.map(csvq).join(',')).join('\n'),'text/csv;charset=utf-8')}
+function exportExcel(){const x=records();if(!x.length)return alert('記録がありません。');if(typeof XLSX==='undefined')return alert('Excel機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。');const rows=[['日付','時刻','当日番号','参加者ID','下肢長(cm)','15％高さ(cm)','メモ'],...x.map(r=>[r.date,r.time,Number(r.dailyNo),r.pid,Number(r.leg),Number(r.result),r.memo])];const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:13},{wch:8},{wch:10},{wch:14},{wch:13},{wch:15},{wch:28}];ws['!autofilter']={ref:`A1:G${rows.length}`};const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'下肢長15％記録');XLSX.writeFile(wb,`下肢長15％記録_${dateKey()}.xlsx`)}
+function backup(){download(`下肢長15バックアップ_${dateKey()}.json`,JSON.stringify(records(),null,2),'application/json')}
+$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const x=JSON.parse(rd.result);if(!Array.isArray(x))throw Error();if(confirm('現在の記録を読み込んだバックアップで置き換えますか？')){store(x);meta();renderToday();renderAll();flash('読み込みました。')}}catch{alert('正しいJSONバックアップではありません。')}};rd.readAsText(f)}
+$('leg').oninput=calc;$('save').onclick=save;$('clear').onclick=clearForm;$('export').onclick=exportCSV;$('exportExcel').onclick=exportExcel;$('backup').onclick=backup;$('import').onclick=()=>$('file').click();$('showAll').onclick=renderAll;$('deleteAll').onclick=()=>{if(confirm('すべての記録を削除しますか？')){localStorage.removeItem(KEY);meta();renderToday();renderAll()}}
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+meta();calc();renderToday();
+</script>
+</body></html>
