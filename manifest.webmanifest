@@ -1,7 +1,7 @@
 {
   "name": "実験参加者管理",
   "short_name": "参加者管理",
-  "description": "実験参加者候補、下肢長15％、条件割付、記録出力",
+  "description": "個人情報を端末内で管理する実験参加者管理アプリ",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

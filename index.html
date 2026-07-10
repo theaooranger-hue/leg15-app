@@ -10,181 +10,126 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>実験参加者管理</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--blue:#205ebe;--light:#edf4ff;--line:#d8e0ec;--red:#b42318;--green:#087443}
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--blue:#205ebe;--light:#edf4ff;--line:#d8e0ec;--red:#b42318;--green:#087443;--amber:#9a6700}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Yu Gothic",sans-serif}
-.wrap{max-width:900px;margin:auto;padding:16px 14px 44px}
+.wrap{max-width:980px;margin:auto;padding:16px 14px 44px}
 h1{text-align:center;font-size:28px;margin:8px 0 2px}.subtitle{text-align:center;color:var(--muted);margin-bottom:16px}
 .card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 8px 28px rgba(16,24,40,.08);margin-bottom:15px}
-h2{font-size:21px;margin:0 0 13px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.metaBox{border:1px solid var(--line);background:#f8fafc;border-radius:14px;padding:13px;text-align:center}
-.metaLabel{font-size:13px;color:var(--muted)}.metaValue{font-size:23px;font-weight:850;margin-top:3px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{display:block;font-size:16px;font-weight:750;margin:13px 0 7px}
-input,select,textarea{width:100%;border:2px solid var(--line);border-radius:13px;padding:13px 14px;font-size:18px;background:#fff;color:var(--text)}
-textarea{min-height:68px;resize:vertical;font-size:15px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
-.result{background:var(--light);border-radius:17px;padding:17px;text-align:center;margin-top:14px}
-.resultLabel{font-weight:750}.resultValue{font-size:46px;font-weight:900;margin:4px}.resultSub{font-size:13px;color:var(--muted)}
-.order{background:#f8fafc;border:2px solid var(--line);border-radius:17px;padding:17px;text-align:center;margin-top:12px}
-.orderTitle{font-weight:800;color:var(--blue);margin-bottom:8px}.orderSteps{font-size:20px;font-weight:850;line-height:1.85}
-.buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
-button{border:0;border-radius:13px;padding:14px 10px;font-size:16px;font-weight:800;cursor:pointer}
-.primary{background:var(--blue);color:#fff}.secondary{background:#e9eef6;color:var(--text)}.danger{background:#fff0f0;color:var(--red)}.full{grid-column:1/-1}
-.group{margin-bottom:14px}.groupTitle{font-weight:850;margin-bottom:8px}.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-size:14px;font-weight:700}
-.chip.used{background:#eefbf4;color:#087443;border-color:#b7e4c7}
-.status{text-align:center;color:var(--green);font-weight:750;min-height:22px;margin-top:8px}
-.tableWrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
-table{width:100%;border-collapse:collapse;min-width:960px;background:white}
-th,td{padding:10px 9px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;white-space:nowrap}
-th{background:#f8fafc;font-weight:850}.smallBtn{padding:7px 10px;font-size:12px;background:#fff0f0;color:var(--red)}
-.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef4ff;color:#205ebe;font-weight:750}.exportPanel{background:#fff8e8;border:2px solid #f2c94c;border-radius:16px;padding:16px;text-align:center;margin-bottom:14px}.exportCount{font-size:34px;font-weight:900;color:#9a6700;margin:4px 0}.exportMeta{font-size:13px;color:#667085}.exportedTag{display:inline-block;padding:4px 8px;border-radius:999px;background:#eefbf4;color:#087443;font-weight:750;font-size:12px}.pendingTag{display:inline-block;padding:4px 8px;border-radius:999px;background:#fff4e5;color:#9a6700;font-weight:750;font-size:12px}
-@media(max-width:650px){.grid2{grid-template-columns:1fr}.metaValue{font-size:20px}.resultValue{font-size:42px}.wrap{padding:12px 10px 36px}.card{padding:16px}}
+h2{font-size:21px;margin:0 0 13px}.privacy{background:#fff8e8;border:2px solid #f2c94c;border-radius:15px;padding:13px;color:#7a5200;line-height:1.65;font-size:14px}
+.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metaBox{border:1px solid var(--line);background:#f8fafc;border-radius:14px;padding:13px;text-align:center}
+.metaLabel{font-size:13px;color:var(--muted)}.metaValue{font-size:22px;font-weight:850;margin-top:3px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:16px;font-weight:750;margin:13px 0 7px}input,select,textarea{width:100%;border:2px solid var(--line);border-radius:13px;padding:13px 14px;font-size:17px;background:#fff;color:var(--text)}
+textarea{min-height:68px;resize:vertical;font-size:15px}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+.result{background:var(--light);border-radius:17px;padding:17px;text-align:center;margin-top:14px}.resultLabel{font-weight:750}.resultValue{font-size:46px;font-weight:900;margin:4px}.resultSub{font-size:13px;color:var(--muted)}
+.order{background:#f8fafc;border:2px solid var(--line);border-radius:17px;padding:17px;text-align:center;margin-top:12px}.orderTitle{font-weight:800;color:var(--blue);margin-bottom:8px}.orderSteps{font-size:20px;font-weight:850;line-height:1.85}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}button{border:0;border-radius:13px;padding:14px 10px;font-size:15px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#e9eef6;color:var(--text)}.danger{background:#fff0f0;color:var(--red)}.full{grid-column:1/-1}
+.status{text-align:center;color:var(--green);font-weight:750;min-height:22px;margin-top:8px}.tableWrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:1180px;background:white}th,td{padding:10px 9px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;white-space:nowrap}th{background:#f8fafc;font-weight:850}.smallBtn{padding:7px 10px;font-size:12px;background:#fff0f0;color:var(--red)}
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef4ff;color:#205ebe;font-weight:750}.tagOk{background:#eefbf4;color:#087443}.tagWarn{background:#fff4e5;color:#9a6700}
+.filterRow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.filterRow button{padding:8px 11px;font-size:13px;background:#eef2f7}.filterRow button.active{background:#205ebe;color:#fff}
+@media(max-width:680px){.grid2{grid-template-columns:1fr}.meta{grid-template-columns:1fr}.resultValue{font-size:42px}.wrap{padding:12px 10px 36px}.card{padding:16px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <h1>実験参加者管理</h1>
-<div class="subtitle">参加者候補・下肢長15％・条件割付・増分記録出力</div>
+<div class="subtitle">候補者・下肢長15％・条件割付・増分Excel出力</div>
+
+<section class="card">
+<div class="privacy"><b>個人情報保護：</b>この公開ページには氏名データは含まれていません。候補者データは、Boxから読み込んだJSONファイルまたはこの端末のブラウザ内にのみ保存されます。</div>
+<div class="buttons">
+<button class="primary" id="importBtn">Boxの候補者データを読み込む</button>
+<input id="importFile" type="file" accept=".json,application/json" hidden>
+<button class="secondary" id="backupBtn">Box保存用バックアップを書き出す</button>
+</div>
+</section>
 
 <section class="card">
 <div class="meta">
-<div class="metaBox"><div class="metaLabel">本日の日付</div><div class="metaValue" id="today">—</div></div>
-<div class="metaBox"><div class="metaLabel">本日の参加者</div><div class="metaValue" id="todayNo">第1名</div></div>
+<div class="metaBox"><div class="metaLabel">候補者総数</div><div class="metaValue" id="totalCount">0名</div></div>
+<div class="metaBox"><div class="metaLabel">本日の記録</div><div class="metaValue" id="todayCount">0名</div></div>
+<div class="metaBox"><div class="metaLabel">未出力記録</div><div class="metaValue" id="pendingCount">0件</div></div>
 </div>
 </section>
 
 <section class="card">
-<h2>1．参加者情報</h2>
+<h2>候補者の追加・更新</h2>
+<input id="editId" type="hidden">
 <div class="grid2">
-<div>
-<label>参加者名</label>
-<input id="name" placeholder="候補者を選択、または直接入力">
+<div><label>氏名</label><input id="name" placeholder="氏名を入力"></div>
+<div><label>候補者ID</label><input id="cid" placeholder="例：C021"></div>
+<div><label>所属・紹介元</label><select id="source">
+<option>樋口研</option><option>ヘルプロ全体</option><option>実験参加者プール</option><option>陳さんの知人</option><option>樋口先生の知り合い</option><option>その他</option>
+</select></div>
+<div><label>募集ステータス</label><select id="recruitStatus">
+<option>候補</option><option>連絡予定</option><option>連絡中</option><option>予約済み</option><option>実施済み</option><option>辞退</option><option>対象外</option><option>保留</option>
+</select></div>
+<div><label>連絡状況</label><select id="contactStatus">
+<option>未連絡</option><option>連絡済み</option><option>返信待ち</option><option>返信あり</option><option>再連絡予定</option><option>連絡不可</option>
+</select></div>
+<div><label>参加可否</label><select id="availability">
+<option>未確認</option><option>参加可</option><option>参加不可</option><option>保留</option>
+</select></div>
+<div><label>連絡日</label><input id="contactDate" type="date"></div>
+<div><label>予約日時</label><input id="schedule" type="datetime-local"></div>
 </div>
-<div>
-<label>参加者ID（任意）</label>
-<input id="pid" placeholder="例：P001">
-</div>
-<div>
-<label>参加者区分</label>
-<select id="source">
-<option>樋口研</option>
-<option>ヘルプロ全体</option>
-<option>実験参加者プール</option>
-<option>陳さんの知人</option>
-<option>樋口先生の知り合い</option>
-<option>その他</option>
-</select>
-</div>
-<div>
-<label>実施状況</label>
-<select id="statusSel">
-<option>候補</option>
-<option>連絡済み</option>
-<option>予約済み</option>
-<option>実施済み</option>
-<option>辞退・キャンセル</option>
-</select>
-</div>
-<div>
-<label>実施予定日（任意）</label>
-<input id="scheduleDate" type="date">
-</div>
-<div>
-<label>実施予定時刻（任意）</label>
-<input id="scheduleTime" type="time">
-</div>
-</div>
-</section>
-
-<section class="card">
-<h2>2．下肢長15％</h2>
-<label>下肢長（cm）</label>
-<input id="leg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：90.0">
-<div class="result">
-<div class="resultLabel">15％の高さ</div>
-<div class="resultValue" id="leg15">— cm</div>
-<div class="resultSub" id="exact">下肢長 × 0.15</div>
-</div>
-</section>
-
-<section class="card">
-<h2>3．条件順序の割付</h2>
-<div class="note">6通りの順序のうち、使用回数が最も少ない順序からランダムに選び、人数ができるだけ均等になるように割り付けます。</div>
-<div class="order">
-<div class="orderTitle">今回の条件順序</div>
-<div class="orderSteps" id="orderSteps">未割付</div>
-</div>
+<label>備考</label><textarea id="memo" placeholder="連絡内容、辞退理由、注意事項など"></textarea>
 <div class="buttons">
-<button class="primary full" id="assignBtn">条件を自動割付</button>
-<button class="secondary full" id="clearOrderBtn">割付をクリア</button>
+<button class="primary full" id="saveCandidateBtn">候補者を保存</button>
+<button class="secondary full" id="clearCandidateBtn">入力をクリア</button>
 </div>
+<div class="status" id="candidateStatus"></div>
 </section>
 
 <section class="card">
-<h2>未出力記録</h2>
-<div class="exportPanel">
-<div>まだExcelに出力していない記録</div>
-<div class="exportCount" id="pendingCount">0件</div>
-<div class="exportMeta" id="lastExportText">前回の出力：まだありません</div>
+<h2>実験記録</h2>
+<div class="grid2">
+<div><label>参加者</label><select id="participantSelect"><option value="">候補者を選択</option></select></div>
+<div><label>下肢長（cm）</label><input id="leg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：90.0"></div>
 </div>
+<div class="result"><div class="resultLabel">15％の高さ</div><div class="resultValue" id="leg15">— cm</div><div class="resultSub" id="exact">下肢長 × 0.15</div></div>
+<div class="order"><div class="orderTitle">条件順序</div><div class="orderSteps" id="orderSteps">未割付</div></div>
+<div class="buttons"><button class="primary" id="assignBtn">条件を自動割付</button><button class="secondary" id="clearOrderBtn">割付をクリア</button><button class="primary full" id="saveRecordBtn">実験記録を保存</button></div>
+<div class="status" id="recordStatus"></div>
+</section>
+
+<section class="card">
+<h2>Excel出力</h2>
 <div class="buttons">
-<button class="primary full" id="exportNewBtn">未出力分だけExcelに出力</button>
-<button class="secondary full" id="exportAllBtn">すべての記録をExcelに出力</button>
+<button class="primary full" id="exportPendingBtn">未出力分だけExcelに出力</button>
+<button class="secondary full" id="exportAllBtn">全記録をExcelに出力</button>
+<button class="secondary full" id="exportCandidateBtn">候補者一覧をExcelに出力</button>
 </div>
-<div class="note">未出力分を出力すると、その記録には「出力済み」の印が付き、次回の未出力Excelには重複して入りません。</div>
+<div class="note">「未出力分」は、一度出力した実験記録を次回のExcelに重複させません。候補者一覧は常に最新状態を全件出力します。</div>
 </section>
 
 <section class="card">
-<h2>4．メモ・保存</h2>
-<label>メモ（任意）</label>
-<textarea id="memo" placeholder="例：右足から跨ぎ開始、連絡事項など"></textarea>
-<div class="buttons">
-<button class="primary full" id="saveBtn">この参加者を保存</button>
-<button class="secondary" id="clearBtn">入力をクリア</button>
-<button class="secondary" id="csvBtn">CSVを書き出す</button>
-<button class="secondary" id="jsonBtn">バックアップ保存</button>
-</div>
-<div class="status" id="saveStatus"></div>
+<h2>候補者一覧</h2>
+<div class="filterRow" id="filters"></div>
+<div class="tableWrap"><table><thead><tr>
+<th>ID</th><th>氏名</th><th>所属・紹介元</th><th>募集</th><th>連絡</th><th>参加可否</th><th>連絡日</th><th>予約日時</th><th>備考</th><th></th>
+</tr></thead><tbody id="candidateBody"></tbody></table></div>
 </section>
 
 <section class="card">
-<h2>実験参加者候補</h2>
-<div id="candidateGroups"></div>
-<div class="note">名前をタップすると、参加者名と参加者区分が自動入力されます。緑色は既に保存済みの候補者です。</div>
-</section>
-
-<section class="card">
-<h2>保存済み記録</h2>
-<div class="tableWrap">
-<table>
-<thead><tr>
-<th>No.</th><th>日付</th><th>時刻</th><th>参加者</th><th>区分</th><th>状況</th><th>予定</th><th>下肢長</th><th>15％</th><th>条件順序</th><th>Excel</th><th>メモ</th><th></th>
-</tr></thead>
-<tbody id="recordBody"></tbody>
-</table>
-</div>
-<div class="buttons">
-<button class="danger full" id="deleteAllBtn">すべての記録を削除</button>
-</div>
-<div class="note">記録はこの端末のブラウザ内に保存されます。別の端末とは自動同期されません。実験終了後はExcelまたはバックアップを保存してください。</div>
+<h2>実験記録一覧</h2>
+<div class="tableWrap"><table><thead><tr>
+<th>No.</th><th>日付</th><th>時刻</th><th>参加者</th><th>所属</th><th>下肢長</th><th>15％</th><th>条件順序</th><th>Excel</th><th></th>
+</tr></thead><tbody id="recordBody"></tbody></table></div>
+<div class="buttons"><button class="danger full" id="deleteAllBtn">端末内の全データを削除</button></div>
 </section>
 </div>
-
 <script>
-const KEY='experiment_participant_manager_v2';
-const LAST_EXPORT_KEY='experiment_participant_manager_last_export_v2';
+const DATA_KEY='participant_private_data_v1';
+const EXPORT_KEY='participant_private_export_v1';
 const $=id=>document.getElementById(id);
-const candidates={
-'樋口研':['原薗さん','脇さん','広崎さん','阿久津さん','菊池さん','新井さん','山本さん','とふたにさん','秦さん','西村さん'],
-'ヘルプロ全体':['村田さん','中平さん','大西さん','土肥さん','土田さん'],
-'実験参加者プール':[],
-'陳さんの知人':['清水さん','王さん','朱さん'],
-'樋口先生の知り合い':['細澤さん','島津さん'],
-'その他':[]
-};
-const conditions=['自然足踏み','15％足踏み','15％歩行跨ぎ'];
+const pad=n=>String(n).padStart(2,'0');
+const dateKey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const emptyData=()=>({version:1,candidates:[],records:[]});
+function getData(){try{const d=JSON.parse(localStorage.getItem(DATA_KEY)||'null');return d&&Array.isArray(d.candidates)&&Array.isArray(d.records)?d:emptyData()}catch{return emptyData()}}
+function setData(d){localStorage.setItem(DATA_KEY,JSON.stringify(d))}
+let currentOrder=null, currentFilter='すべて';
 const orders=[
 ['自然足踏み','15％足踏み','15％歩行跨ぎ'],
 ['自然足踏み','15％歩行跨ぎ','15％足踏み'],
@@ -193,143 +138,35 @@ const orders=[
 ['15％歩行跨ぎ','自然足踏み','15％足踏み'],
 ['15％歩行跨ぎ','15％足踏み','自然足踏み']
 ];
-let currentOrder=null;
-const pad=n=>String(n).padStart(2,'0');
-const dateKey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-const dateJP=(d=new Date())=>`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
-const getRecords=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
-const setRecords=x=>localStorage.setItem(KEY,JSON.stringify(x));
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-
-function refreshMeta(){
- const today=dateKey();
- $('today').textContent=dateJP();
- $('todayNo').textContent=`第${getRecords().filter(r=>r.createdDate===today).length+1}名`;
-}
-function calc(){
- const v=parseFloat($('leg').value);
- if(!Number.isFinite(v)||v<=0){$('leg15').textContent='— cm';$('exact').textContent='下肢長 × 0.15';return null}
- const x=v*.15;$('leg15').textContent=x.toFixed(1)+' cm';$('exact').textContent='正確な値：'+x.toFixed(3)+' cm';return x;
-}
-function orderKey(a){return a.join(' → ')}
-function renderOrder(){
- $('orderSteps').innerHTML=currentOrder?currentOrder.map((x,i)=>`${i+1}．${esc(x)}`).join('<br>'):'未割付';
-}
-function assignOrder(){
- const rec=getRecords();
- const counts=Object.fromEntries(orders.map(o=>[orderKey(o),0]));
- rec.forEach(r=>{if(r.order&&counts[r.order]!==undefined)counts[r.order]++});
- const min=Math.min(...Object.values(counts));
- const choices=orders.filter(o=>counts[orderKey(o)]===min);
- currentOrder=choices[Math.floor(Math.random()*choices.length)];
- renderOrder();
-}
-function renderCandidates(){
- const used=new Set(getRecords().map(r=>r.name));
- $('candidateGroups').innerHTML=Object.entries(candidates).map(([group,names])=>{
-   const chips=names.length?names.map(n=>`<button class="chip ${used.has(n)?'used':''}" onclick="pickCandidate('${esc(n)}','${esc(group)}')">${esc(n)}</button>`).join(''):'<span class="note">登録候補なし（参加者名を直接入力してください）</span>';
-   return `<div class="group"><div class="groupTitle">${esc(group)}</div><div class="chips">${chips}</div></div>`;
- }).join('');
-}
-window.pickCandidate=(name,group)=>{$('name').value=name;$('source').value=group;window.scrollTo({top:0,behavior:'smooth'})};
-function clearForm(){
- ['name','pid','scheduleDate','scheduleTime','leg','memo'].forEach(id=>$(id).value='');
- $('source').value='樋口研';$('statusSel').value='候補';currentOrder=null;renderOrder();calc();
-}
-function flash(t){$('saveStatus').textContent=t;setTimeout(()=>$('saveStatus').textContent='',2300)}
-function saveRecord(){
- const name=$('name').value.trim();
- if(!name){alert('参加者名を入力してください。');return}
- if(!currentOrder){alert('条件順序を割り付けてください。');return}
- const leg=parseFloat($('leg').value), result=calc();
- const now=new Date(), rec=getRecords(), today=dateKey(now);
- const no=rec.length+1;
- rec.push({
-  id:String(Date.now()), no,
-  createdDate:today, createdTime:`${pad(now.getHours())}:${pad(now.getMinutes())}`,
-  name, pid:$('pid').value.trim(), source:$('source').value, status:$('statusSel').value,
-  scheduleDate:$('scheduleDate').value, scheduleTime:$('scheduleTime').value,
-  leg:Number.isFinite(leg)?leg:null, leg15:result,
-  order:orderKey(currentOrder), memo:$('memo').value.trim(), exportedAt:null
- });
- setRecords(rec);clearForm();refreshMeta();renderRecords();renderCandidates();flash('保存しました。');
-}
-function renderRecords(){
- const rec=getRecords();
- $('recordBody').innerHTML=rec.length?rec.slice().reverse().map(r=>`<tr>
- <td>${r.no}</td><td>${esc(r.createdDate)}</td><td>${esc(r.createdTime)}</td>
- <td><b>${esc(r.name)}</b>${r.pid?'<br><span class="badge">'+esc(r.pid)+'</span>':''}</td>
- <td>${esc(r.source)}</td><td>${esc(r.status)}</td>
- <td>${esc([r.scheduleDate,r.scheduleTime].filter(Boolean).join(' '))}</td>
- <td>${r.leg==null?'':Number(r.leg).toFixed(1)}</td><td>${r.leg15==null?'':Number(r.leg15).toFixed(1)}</td>
- <td>${esc(r.order)}</td>
- <td>${r.exportedAt?'<span class="exportedTag">出力済み</span>':'<span class="pendingTag">未出力</span>'}</td>
- <td>${esc(r.memo)}</td>
- <td><button class="smallBtn" onclick="removeRecord('${r.id}')">削除</button></td></tr>`).join(''):
- '<tr><td colspan="13" style="text-align:center;color:#667085">記録はまだありません。</td></tr>';
- refreshExportStatus();
-}
-window.removeRecord=id=>{if(confirm('この記録を削除しますか？')){setRecords(getRecords().filter(r=>r.id!==id));refreshMeta();renderRecords();renderCandidates()}};
-function rows(selected){
- const list=selected||getRecords();
- return [['No.','記録日','記録時刻','参加者名','参加者ID','参加者区分','実施状況','実施予定日','実施予定時刻','下肢長(cm)','15％高さ(cm)','条件順序','メモ'],
- ...list.map(r=>[r.no,r.createdDate,r.createdTime,r.name,r.pid,r.source,r.status,r.scheduleDate,r.scheduleTime,r.leg??'',r.leg15??'',r.order,r.memo])];
-}
+const orderKey=o=>o.join(' → ');
+function calc(){const v=parseFloat($('leg').value);if(!Number.isFinite(v)||v<=0){$('leg15').textContent='— cm';$('exact').textContent='下肢長 × 0.15';return null}const x=v*.15;$('leg15').textContent=x.toFixed(1)+' cm';$('exact').textContent='正確な値：'+x.toFixed(3)+' cm';return x}
+function refreshMeta(){const d=getData(),today=dateKey();$('totalCount').textContent=d.candidates.length+'名';$('todayCount').textContent=d.records.filter(r=>r.date===today).length+'名';$('pendingCount').textContent=d.records.filter(r=>!r.exportedAt).length+'件'}
+function nextCandidateId(){const d=getData(),nums=d.candidates.map(c=>parseInt(String(c.cid||'').replace(/\D/g,''))).filter(Number.isFinite);return 'C'+String((nums.length?Math.max(...nums):0)+1).padStart(3,'0')}
+function clearCandidate(){['editId','name','contactDate','schedule','memo'].forEach(id=>$(id).value='');$('cid').value=nextCandidateId();$('source').value='樋口研';$('recruitStatus').value='候補';$('contactStatus').value='未連絡';$('availability').value='未確認'}
+function flash(id,t){$(id).textContent=t;setTimeout(()=>$(id).textContent='',2300)}
+function saveCandidate(){const name=$('name').value.trim();if(!name)return alert('氏名を入力してください。');const d=getData(),editId=$('editId').value;const obj={id:editId||String(Date.now()),cid:$('cid').value.trim()||nextCandidateId(),name,source:$('source').value,recruitStatus:$('recruitStatus').value,contactStatus:$('contactStatus').value,availability:$('availability').value,contactDate:$('contactDate').value,schedule:$('schedule').value,memo:$('memo').value.trim(),updatedAt:new Date().toISOString()};const i=d.candidates.findIndex(c=>c.id===editId);if(i>=0)d.candidates[i]=obj;else d.candidates.push(obj);setData(d);clearCandidate();renderAll();flash('candidateStatus','保存しました。')}
+window.editCandidate=id=>{const c=getData().candidates.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('cid').value=c.cid;$('name').value=c.name;$('source').value=c.source;$('recruitStatus').value=c.recruitStatus;$('contactStatus').value=c.contactStatus;$('availability').value=c.availability;$('contactDate').value=c.contactDate||'';$('schedule').value=c.schedule||'';$('memo').value=c.memo||'';window.scrollTo({top:150,behavior:'smooth'})}
+window.deleteCandidate=id=>{if(!confirm('この候補者を削除しますか？辞退者は削除せず「辞退」に変更することを推奨します。'))return;const d=getData();d.candidates=d.candidates.filter(c=>c.id!==id);setData(d);renderAll()}
+function renderCandidates(){const d=getData(),list=currentFilter==='すべて'?d.candidates:d.candidates.filter(c=>c.recruitStatus===currentFilter);$('candidateBody').innerHTML=list.length?list.map(c=>`<tr><td>${esc(c.cid)}</td><td><b>${esc(c.name)}</b></td><td>${esc(c.source)}</td><td>${esc(c.recruitStatus)}</td><td>${esc(c.contactStatus)}</td><td>${esc(c.availability)}</td><td>${esc(c.contactDate)}</td><td>${esc(c.schedule)}</td><td>${esc(c.memo)}</td><td><button class="secondary" onclick="editCandidate('${c.id}')">編集</button> <button class="smallBtn" onclick="deleteCandidate('${c.id}')">削除</button></td></tr>`).join(''):'<tr><td colspan="10">該当する候補者はいません。</td></tr>'}
+function renderFilters(){const fs=['すべて','候補','連絡予定','連絡中','予約済み','実施済み','辞退','対象外','保留'];$('filters').innerHTML=fs.map(f=>`<button class="${f===currentFilter?'active':''}" onclick="setFilter('${f}')">${f}</button>`).join('')}
+window.setFilter=f=>{currentFilter=f;renderFilters();renderCandidates()}
+function renderParticipantSelect(){const d=getData(),usable=d.candidates.filter(c=>!['辞退','対象外'].includes(c.recruitStatus)&&c.availability!=='参加不可');$('participantSelect').innerHTML='<option value="">候補者を選択</option>'+usable.map(c=>`<option value="${c.id}">${esc(c.cid)}　${esc(c.name)}（${esc(c.source)}）</option>`).join('')}
+function assignOrder(){const d=getData(),counts=Object.fromEntries(orders.map(o=>[orderKey(o),0]));d.records.forEach(r=>{if(r.order in counts)counts[r.order]++});const min=Math.min(...Object.values(counts));const choices=orders.filter(o=>counts[orderKey(o)]===min);currentOrder=choices[Math.floor(Math.random()*choices.length)];renderOrder()}
+function renderOrder(){$('orderSteps').innerHTML=currentOrder?currentOrder.map((x,i)=>`${i+1}．${esc(x)}`).join('<br>'):'未割付'}
+function saveRecord(){const pid=$('participantSelect').value;if(!pid)return alert('参加者を選択してください。');if(!currentOrder)return alert('条件順序を割り付けてください。');const leg=parseFloat($('leg').value),leg15=calc();if(!Number.isFinite(leg)||leg<=0)return alert('下肢長を入力してください。');const d=getData(),c=d.candidates.find(x=>x.id===pid),now=new Date();d.records.push({id:String(Date.now()),no:d.records.length+1,date:dateKey(now),time:`${pad(now.getHours())}:${pad(now.getMinutes())}`,candidateId:c.id,cid:c.cid,name:c.name,source:c.source,leg,leg15,order:orderKey(currentOrder),exportedAt:null});c.recruitStatus='実施済み';setData(d);$('participantSelect').value='';$('leg').value='';currentOrder=null;calc();renderOrder();renderAll();flash('recordStatus','実験記録を保存しました。')}
+function renderRecords(){const rs=getData().records;$('recordBody').innerHTML=rs.length?rs.slice().reverse().map(r=>`<tr><td>${r.no}</td><td>${r.date}</td><td>${r.time}</td><td><b>${esc(r.name)}</b><br>${esc(r.cid)}</td><td>${esc(r.source)}</td><td>${Number(r.leg).toFixed(1)}</td><td>${Number(r.leg15).toFixed(1)}</td><td>${esc(r.order)}</td><td>${r.exportedAt?'<span class="badge tagOk">出力済み</span>':'<span class="badge tagWarn">未出力</span>'}</td><td><button class="smallBtn" onclick="deleteRecord('${r.id}')">削除</button></td></tr>`).join(''):'<tr><td colspan="10">実験記録はまだありません。</td></tr>'}
+window.deleteRecord=id=>{if(!confirm('この実験記録を削除しますか？'))return;const d=getData();d.records=d.records.filter(r=>r.id!==id);setData(d);renderAll()}
 function download(name,data,type){const b=new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
-const csvq=v=>{const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
-function exportCSV(){if(!getRecords().length)return alert('記録がありません。');download(`実験参加者記録_${dateKey()}.csv`,'\uFEFF'+rows().map(r=>r.map(csvq).join(',')).join('\n'),'text/csv;charset=utf-8')}
 function xmlEsc(v){return String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
-function buildExcel(list,filePrefix){
- if(!list.length){alert('出力する記録がありません。');return false}
- const data=rows(list);
- const xml=`<?xml version="1.0" encoding="UTF-8"?>
- <?mso-application progid="Excel.Sheet"?>
- <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
- <Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#DCE6F1" ss:Pattern="Solid"/></Style></Styles>
- <Worksheet ss:Name="参加者記録"><Table>
- ${data.map((row,i)=>`<Row>${row.map(v=>`<Cell${i===0?' ss:StyleID="Header"':''}><Data ss:Type="${typeof v==='number'?'Number':'String'}">${xmlEsc(v)}</Data></Cell>`).join('')}</Row>`).join('')}
- </Table></Worksheet></Workbook>`;
- download(`${filePrefix}_${dateKey()}.xls`,'\uFEFF'+xml,'application/vnd.ms-excel');
- return true;
-}
-function exportNewExcel(){
- const all=getRecords(), pending=all.filter(r=>!r.exportedAt);
- if(!pending.length){alert('未出力の記録はありません。');return}
- if(buildExcel(pending,'実験参加者記録_未出力分')){
-   const stamp=new Date().toISOString();
-   const ids=new Set(pending.map(r=>r.id));
-   setRecords(all.map(r=>ids.has(r.id)?{...r,exportedAt:stamp}:r));
-   localStorage.setItem(LAST_EXPORT_KEY,stamp);
-   renderRecords();renderCandidates();flash(`${pending.length}件を出力済みにしました。`);
- }
-}
-function exportAllExcel(){
- const all=getRecords();
- if(buildExcel(all,'実験参加者記録_全件')){
-   localStorage.setItem(LAST_EXPORT_KEY,new Date().toISOString());
-   refreshExportStatus();
- }
-}
-function refreshExportStatus(){
- const pending=getRecords().filter(r=>!r.exportedAt);
- $('pendingCount').textContent=`${pending.length}件`;
- const last=localStorage.getItem(LAST_EXPORT_KEY);
- if(last){
-  const d=new Date(last);
-  $('lastExportText').textContent=`前回の出力：${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${pad(d.getHours())}:${pad(d.getMinutes())}`;
- }else{
-  $('lastExportText').textContent='前回の出力：まだありません';
- }
-}
-function exportJSON(){download(`実験参加者記録_バックアップ_${dateKey()}.json`,JSON.stringify(getRecords(),null,2),'application/json')}
-$('leg').addEventListener('input',calc);$('assignBtn').onclick=assignOrder;$('clearOrderBtn').onclick=()=>{currentOrder=null;renderOrder()};
-$('saveBtn').onclick=saveRecord;$('clearBtn').onclick=clearForm;$('exportNewBtn').onclick=exportNewExcel;$('exportAllBtn').onclick=exportAllExcel;$('csvBtn').onclick=exportCSV;$('jsonBtn').onclick=exportJSON;
-$('deleteAllBtn').onclick=()=>{if(confirm('すべての記録を削除しますか？この操作は元に戻せません。')){localStorage.removeItem(KEY);localStorage.removeItem(LAST_EXPORT_KEY);refreshMeta();renderRecords();renderCandidates()}};
+function excelXml(sheetName,rows){return `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#DCE6F1" ss:Pattern="Solid"/></Style></Styles><Worksheet ss:Name="${xmlEsc(sheetName)}"><Table>${rows.map((row,i)=>`<Row>${row.map(v=>`<Cell${i===0?' ss:StyleID="Header"':''}><Data ss:Type="${typeof v==='number'?'Number':'String'}">${xmlEsc(v)}</Data></Cell>`).join('')}</Row>`).join('')}</Table></Worksheet></Workbook>`}
+function exportRecords(all){const d=getData(),list=all?d.records:d.records.filter(r=>!r.exportedAt);if(!list.length)return alert('出力する記録がありません。');const rows=[['No.','日付','時刻','候補者ID','氏名','所属・紹介元','下肢長(cm)','15％高さ(cm)','条件順序'],...list.map(r=>[r.no,r.date,r.time,r.cid,r.name,r.source,r.leg,r.leg15,r.order])];download(`実験記録_${all?'全件':'未出力'}_${dateKey()}.xls`,'\uFEFF'+excelXml('実験記録',rows),'application/vnd.ms-excel');if(!all){const stamp=new Date().toISOString(),ids=new Set(list.map(r=>r.id));d.records=d.records.map(r=>ids.has(r.id)?{...r,exportedAt:stamp}:r);setData(d);renderAll()}}
+function exportCandidates(){const cs=getData().candidates;if(!cs.length)return alert('候補者がありません。');const rows=[['候補者ID','氏名','所属・紹介元','募集ステータス','連絡状況','参加可否','連絡日','予約日時','備考'],...cs.map(c=>[c.cid,c.name,c.source,c.recruitStatus,c.contactStatus,c.availability,c.contactDate,c.schedule,c.memo])];download(`実験参加者候補一覧_${dateKey()}.xls`,'\uFEFF'+excelXml('候補者一覧',rows),'application/vnd.ms-excel')}
+function exportBackup(){const d=getData();d.exportedAt=new Date().toISOString();download(`実験参加者管理_バックアップ_${dateKey()}.json`,JSON.stringify(d,null,2),'application/json')}
+function importBackup(file){const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||!Array.isArray(d.candidates)||!Array.isArray(d.records))throw Error();if(confirm('現在の端末内データを、読み込んだBoxデータで置き換えますか？')){setData(d);clearCandidate();renderAll();alert('読み込みました。')}}catch{alert('このファイルは正しい候補者データではありません。')}};rd.readAsText(file)}
+function renderAll(){refreshMeta();renderFilters();renderCandidates();renderParticipantSelect();renderRecords()}
+$('leg').oninput=calc;$('assignBtn').onclick=assignOrder;$('clearOrderBtn').onclick=()=>{currentOrder=null;renderOrder()};$('saveRecordBtn').onclick=saveRecord;$('saveCandidateBtn').onclick=saveCandidate;$('clearCandidateBtn').onclick=clearCandidate;$('exportPendingBtn').onclick=()=>exportRecords(false);$('exportAllBtn').onclick=()=>exportRecords(true);$('exportCandidateBtn').onclick=exportCandidates;$('backupBtn').onclick=exportBackup;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{const f=e.target.files[0];if(f)importBackup(f)};$('deleteAllBtn').onclick=()=>{if(confirm('この端末内の候補者・実験記録をすべて削除しますか？')){localStorage.removeItem(DATA_KEY);clearCandidate();currentOrder=null;renderOrder();renderAll()}}
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-refreshMeta();calc();renderOrder();renderCandidates();renderRecords();
+clearCandidate();calc();renderOrder();renderAll();
 </script>
 </body>
 </html>
