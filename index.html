@@ -9,6 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>実験参加者管理</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--blue:#205ebe;--light:#edf4ff;--line:#d8e0ec;--red:#b42318;--green:#087443;--amber:#9a6700}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Yu Gothic",sans-serif}
@@ -36,11 +37,11 @@ table{width:100%;border-collapse:collapse;min-width:1180px;background:white}th,t
 <div class="subtitle">候補者・下肢長15％・条件割付・増分Excel出力</div>
 
 <section class="card">
-<div class="privacy"><b>個人情報保護：</b>この公開ページには氏名データは含まれていません。候補者データは、Boxから読み込んだJSONファイルまたはこの端末のブラウザ内にのみ保存されます。</div>
+<div class="privacy"><b>個人情報保護：</b>この公開ページには氏名データは含まれていません。候補者データは、この端末から選択したExcelファイルまたはこの端末のブラウザ内にのみ保存されます。Boxへのアクセスは行いません。</div>
 <div class="buttons">
-<button class="primary" id="importBtn">Boxの候補者データを読み込む</button>
-<input id="importFile" type="file" accept=".json,application/json" hidden>
-<button class="secondary" id="backupBtn">Box保存用バックアップを書き出す</button>
+<button class="primary" id="importBtn">端末のExcelを読み込む</button>
+<input id="importFile" type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" hidden>
+<button class="secondary" id="backupBtn">全データをExcelに保存</button>
 </div>
 </section>
 
@@ -161,10 +162,49 @@ function xmlEsc(v){return String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&
 function excelXml(sheetName,rows){return `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#DCE6F1" ss:Pattern="Solid"/></Style></Styles><Worksheet ss:Name="${xmlEsc(sheetName)}"><Table>${rows.map((row,i)=>`<Row>${row.map(v=>`<Cell${i===0?' ss:StyleID="Header"':''}><Data ss:Type="${typeof v==='number'?'Number':'String'}">${xmlEsc(v)}</Data></Cell>`).join('')}</Row>`).join('')}</Table></Worksheet></Workbook>`}
 function exportRecords(all){const d=getData(),list=all?d.records:d.records.filter(r=>!r.exportedAt);if(!list.length)return alert('出力する記録がありません。');const rows=[['No.','日付','時刻','候補者ID','氏名','所属・紹介元','下肢長(cm)','15％高さ(cm)','条件順序'],...list.map(r=>[r.no,r.date,r.time,r.cid,r.name,r.source,r.leg,r.leg15,r.order])];download(`実験記録_${all?'全件':'未出力'}_${dateKey()}.xls`,'\uFEFF'+excelXml('実験記録',rows),'application/vnd.ms-excel');if(!all){const stamp=new Date().toISOString(),ids=new Set(list.map(r=>r.id));d.records=d.records.map(r=>ids.has(r.id)?{...r,exportedAt:stamp}:r);setData(d);renderAll()}}
 function exportCandidates(){const cs=getData().candidates;if(!cs.length)return alert('候補者がありません。');const rows=[['候補者ID','氏名','所属・紹介元','募集ステータス','連絡状況','参加可否','連絡日','予約日時','備考'],...cs.map(c=>[c.cid,c.name,c.source,c.recruitStatus,c.contactStatus,c.availability,c.contactDate,c.schedule,c.memo])];download(`実験参加者候補一覧_${dateKey()}.xls`,'\uFEFF'+excelXml('候補者一覧',rows),'application/vnd.ms-excel')}
-function exportBackup(){const d=getData();d.exportedAt=new Date().toISOString();download(`実験参加者管理_バックアップ_${dateKey()}.json`,JSON.stringify(d,null,2),'application/json')}
-function importBackup(file){const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||!Array.isArray(d.candidates)||!Array.isArray(d.records))throw Error();if(confirm('現在の端末内データを、読み込んだBoxデータで置き換えますか？')){setData(d);clearCandidate();renderAll();alert('読み込みました。')}}catch{alert('このファイルは正しい候補者データではありません。')}};rd.readAsText(file)}
+function normalizeDate(v){
+ if(v==null||v==='')return '';
+ if(v instanceof Date&&!isNaN(v))return `${v.getFullYear()}-${pad(v.getMonth()+1)}-${pad(v.getDate())}`;
+ if(typeof v==='number'&&window.XLSX){const x=XLSX.SSF.parse_date_code(v);if(x)return `${x.y}-${pad(x.m)}-${pad(x.d)}`}
+ const t=String(v).trim().replace(/[./]/g,'-');
+ const m=t.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);return m?`${m[1]}-${pad(m[2])}-${pad(m[3])}`:t;
+}
+function normalizeDateTime(v){
+ if(v==null||v==='')return '';
+ if(v instanceof Date&&!isNaN(v))return `${v.getFullYear()}-${pad(v.getMonth()+1)}-${pad(v.getDate())}T${pad(v.getHours())}:${pad(v.getMinutes())}`;
+ const t=String(v).trim().replace(/\//g,'-').replace(' ','T');
+ const m=t.match(/(\d{4})-(\d{1,2})-(\d{1,2})(?:T(\d{1,2}):(\d{2}))?/);return m?`${m[1]}-${pad(m[2])}-${pad(m[3])}${m[4]?`T${pad(m[4])}:${m[5]}`:''}`:t;
+}
+const pick=(o,names)=>{for(const n of names){if(o[n]!==undefined&&o[n]!==null&&String(o[n]).trim()!=='')return o[n]}return ''};
+function exportExcelBackup(){
+ if(!window.XLSX)return alert('Excel機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。');
+ const d=getData();
+ const candidates=d.candidates.map(c=>({候補者ID:c.cid,氏名:c.name,'所属・紹介元':c.source,募集ステータス:c.recruitStatus,連絡状況:c.contactStatus,参加可否:c.availability,連絡日:c.contactDate,予約日時:c.schedule,備考:c.memo,内部ID:c.id,更新日時:c.updatedAt||''}));
+ const records=d.records.map(r=>({'No.':r.no,日付:r.date,時刻:r.time,候補者ID:r.cid,氏名:r.name,'所属・紹介元':r.source,'下肢長(cm)':r.leg,'15％高さ(cm)':r.leg15,条件順序:r.order,出力日時:r.exportedAt||'',内部ID:r.id,候補者内部ID:r.candidateId||''}));
+ const wb=XLSX.utils.book_new();
+ XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(candidates,{header:['候補者ID','氏名','所属・紹介元','募集ステータス','連絡状況','参加可否','連絡日','予約日時','備考','内部ID','更新日時']}),'候補者一覧');
+ XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records,{header:['No.','日付','時刻','候補者ID','氏名','所属・紹介元','下肢長(cm)','15％高さ(cm)','条件順序','出力日時','内部ID','候補者内部ID']}),'実験記録');
+ XLSX.writeFile(wb,`実験参加者管理_全データ_${dateKey()}.xlsx`);
+}
+function importExcel(file){
+ if(!window.XLSX)return alert('Excel機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。');
+ const rd=new FileReader();rd.onload=()=>{try{
+  const wb=XLSX.read(rd.result,{type:'array',cellDates:true});
+  let candidateRows=[],recordRows=[];
+  for(const name of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[name],{defval:'',raw:true});if(!rows.length)continue;const keys=Object.keys(rows[0]);if(keys.some(k=>String(k).includes('氏名'))&&keys.some(k=>String(k).includes('募集')))candidateRows=rows;else if(keys.some(k=>String(k).includes('下肢長'))||keys.some(k=>String(k).includes('条件順序')))recordRows=rows;else if(!candidateRows.length&&keys.some(k=>String(k).includes('氏名')))candidateRows=rows;}
+  if(!candidateRows.length)throw new Error('候補者一覧のシートが見つかりません');
+  const now=Date.now();
+  const candidates=candidateRows.filter(r=>String(pick(r,['氏名','名前','参加者氏名'])).trim()).map((r,i)=>({
+   id:String(pick(r,['内部ID','id'])||`excel-c-${now}-${i}`),cid:String(pick(r,['候補者ID','ID','候補者番号'])||`C${String(i+1).padStart(3,'0')}`).trim(),name:String(pick(r,['氏名','名前','参加者氏名'])).trim(),source:String(pick(r,['所属・紹介元','所属','紹介元'])||'その他'),recruitStatus:String(pick(r,['募集ステータス','募集','ステータス'])||'候補'),contactStatus:String(pick(r,['連絡状況','連絡'])||'未連絡'),availability:String(pick(r,['参加可否','可否'])||'未確認'),contactDate:normalizeDate(pick(r,['連絡日'])),schedule:normalizeDateTime(pick(r,['予約日時','予約日程','実験日時'])),memo:String(pick(r,['備考','メモ','コメント'])||''),updatedAt:String(pick(r,['更新日時'])||new Date().toISOString())
+  }));
+  const byCid=Object.fromEntries(candidates.map(c=>[c.cid,c]));
+  const records=recordRows.filter(r=>String(pick(r,['氏名','名前'])).trim()).map((r,i)=>{const cid=String(pick(r,['候補者ID','ID'])||'');const c=byCid[cid];const leg=Number(pick(r,['下肢長(cm)','下肢長','下肢長（cm）']))||0;return {id:String(pick(r,['内部ID'])||`excel-r-${now}-${i}`),no:Number(pick(r,['No.','No','番号']))||i+1,date:normalizeDate(pick(r,['日付','実験日'])),time:String(pick(r,['時刻','時間'])||''),candidateId:String(pick(r,['候補者内部ID'])||(c?c.id:'')),cid:cid||(c?c.cid:''),name:String(pick(r,['氏名','名前'])),source:String(pick(r,['所属・紹介元','所属'])||(c?c.source:'')),leg,leg15:Number(pick(r,['15％高さ(cm)','15%高さ(cm)','15％','15%']))||(leg?leg*.15:0),order:String(pick(r,['条件順序','順序'])||''),exportedAt:String(pick(r,['出力日時'])||'')};});
+  const d={version:1,candidates,records};
+  if(confirm(`Excelから候補者${candidates.length}名${records.length?`、実験記録${records.length}件`:''}を読み込み、現在の端末内データを置き換えますか？`)){setData(d);clearCandidate();renderAll();alert('Excelを読み込みました。');}
+ }catch(err){console.error(err);alert('Excelを読み込めませんでした。候補者一覧に「氏名」などの見出しがあるか確認してください。');}finally{$('importFile').value=''} };rd.readAsArrayBuffer(file);
+}
 function renderAll(){refreshMeta();renderFilters();renderCandidates();renderParticipantSelect();renderRecords()}
-$('leg').oninput=calc;$('assignBtn').onclick=assignOrder;$('clearOrderBtn').onclick=()=>{currentOrder=null;renderOrder()};$('saveRecordBtn').onclick=saveRecord;$('saveCandidateBtn').onclick=saveCandidate;$('clearCandidateBtn').onclick=clearCandidate;$('exportPendingBtn').onclick=()=>exportRecords(false);$('exportAllBtn').onclick=()=>exportRecords(true);$('exportCandidateBtn').onclick=exportCandidates;$('backupBtn').onclick=exportBackup;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{const f=e.target.files[0];if(f)importBackup(f)};$('deleteAllBtn').onclick=()=>{if(confirm('この端末内の候補者・実験記録をすべて削除しますか？')){localStorage.removeItem(DATA_KEY);clearCandidate();currentOrder=null;renderOrder();renderAll()}}
+$('leg').oninput=calc;$('assignBtn').onclick=assignOrder;$('clearOrderBtn').onclick=()=>{currentOrder=null;renderOrder()};$('saveRecordBtn').onclick=saveRecord;$('saveCandidateBtn').onclick=saveCandidate;$('clearCandidateBtn').onclick=clearCandidate;$('exportPendingBtn').onclick=()=>exportRecords(false);$('exportAllBtn').onclick=()=>exportRecords(true);$('exportCandidateBtn').onclick=exportCandidates;$('backupBtn').onclick=exportExcelBackup;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{const f=e.target.files[0];if(f)importExcel(f)};$('deleteAllBtn').onclick=()=>{if(confirm('この端末内の候補者・実験記録をすべて削除しますか？')){localStorage.removeItem(DATA_KEY);clearCandidate();currentOrder=null;renderOrder();renderAll()}}
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
 clearCandidate();calc();renderOrder();renderAll();
 </script>
